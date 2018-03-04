@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>hellocanvas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+<body>
+    <canvas id="hellocanvas" width="400" height="300"></canvas>
+    <script>
+        var canvas = document.getElementById("hellocanvas");
+        if (canvas.getContext) 
+        {
+            var context = canvas.getContext('2d');
+            context.fillStyle = "red";
+            context.fillRect(10,20,100,150);
+            context.strokeStyle = "green"; 
+            context.lineWidth = 5;
+            context.strokeRect(20,30,200,200);
+            context.beginPath();
+            context.arc(80,80,40,0,Math.PI,false);
+            context.closePath();
+            context.fillStyle = "yellow";
+            context.fill();
+            context.beginPath();
+            context.moveTo(100,100);
+            context.arcTo(50,50,10,200,200);
+            context.lineTo(200,200);
+            context.closePath();
+            context.strokeStyle = "blue";
+            context.stroke();
+        }
+            
+
+    </script>
+
+    
+</body>
+</html>
