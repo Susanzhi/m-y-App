@@ -24,32 +24,6 @@ bool comparison(Job a, Job b)
 void printJobScheduling(Job arr[], int n)
 {
     //按照利润递减顺序对所有工作进行排序
-//程序找到的最大利润的工作序列从一个给定的数组
-//工作的最后期限和利润
-
-#include "stdafx.h"
-#include <algorithm>
-#include <iostream>
-using namespace std;
- 
-//代表一份工作的数据结构
-struct Job
-{
-   char id;      // 工作Id
-   int dead;    // 工作的DDL
-   int profit;  // 如果工作在截止日期之前或之后完成，则获利？
-};
- 
-//此功能用于根据利润对所有作业进行排序
-bool comparison(Job a, Job b)
-{
-     return (a.profit > b.profit);
-}
- 
-//返回所需平台的最小数量
-void printJobScheduling(Job arr[], int n)
-{
-    //按照利润递减顺序对所有工作进行排序
     sort(arr, arr+1, comparison);
 	n=1;
     int result[n]; //存储结果（作业顺序）
@@ -91,3 +65,4 @@ int main()
     printJobScheduling(arr, n);
     return 0;
 }
+
