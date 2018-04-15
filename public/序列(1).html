@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<title>
+    最佳工作序列
+</title>
+<body>
+  
+</body>
+<head> 
+<meta charset="utf-8">
+<script type="text/javascript">
+       var work=[{ID:1, Time:4 ,Deadline:10,worth:2},
+                 {ID:2, Time:3 ,Deadline:8,worth:3},
+                 {ID:3, Time:2 ,Deadline:4,worth:3},
+                 {ID:4, Time:1 ,Deadline:2,worth:6} ]
+
+     for(var i=0;i<4;i++)   //只有一个工作组的情况
+     {
+       document.write("工作序列："+work[i].ID+"</br>");
+       var leftworth1=new Array();
+       leftworth1[i]=14-work[i].worth;
+       document.write("价值："+work[i].worth+" 剩余价值："+leftworth1[i]+" 工时："+work[i].Time+" 期限："+work[i].Deadline+"</br>");
+      }   
+
+       var worth2=new Array();
+       var leftworth2=new Array();
+       var time2=new Array();
+       var deadline2=new Array();
+       var m=0;
+      for(var j=0;j<3;j++)   //有两个工作组的情况
+      {
+         for(var k=j+1;k<4;k++ )
+         {
+            document.write("工作序列："+work[j].ID+" "+work[k].ID+"</br>");
+            worth2[m]=work[j].worth+work[k].worth;  //价值
+            leftworth2[m]=14-worth2[m];   //剩余价值
+
+            if(work[j].Time<work[k].time)
+            time2[m]=work[k].Time;
+            else
+            time2[m]=work[j].Time;    //工时
+
+            if(work[j].Deadline<work[k].Deadline)
+            deadline2[m]=work[j].Deadline;
+            else
+            deadline2[m]=work[k].Deadline;  //期限
+
+            document.write("价值："+worth2[m]+" 剩余价值："+leftworth2[m]+" 工时:"+time2[m]+" 期限："+deadline2[m]+"</br>");
+            m++; 
+         }
+      }
+
+      var worth3=new Array();
+      var leftworth3=new Array();
+      var time3=new Array();
+      var deadline3=new Array();
+      var n=0;
+      for(var i=0;i<2;i++)    //有三个工作组的情况
+      {
+          for(var j=i+1;j<3;j++)
+          {
+              for(var k=j+1;k<4;k++)
+              {
+                document.write("工作序列："+work[i].ID+" "+work[j].ID+" "+work[k].ID+"</br>");
+                worth3[n]=work[i].worth+work[j].worth+work[k].worth;  //价值
+                leftworth3[n]=14-worth3[n];   //剩余价值
+                if(work[i].Time<work[j].Time)
+                {
+                    time3[n]=work[j].Time;
+                }
+                else if(work[i].Time<work[k].Time)
+                {
+                    time3[n]=work[k].Time;
+                }
+                else
+                time3[n]=work[i].Time;    //工时
+
+                if(work[i].Deadline<work[j].Deadline)
+                {
+                    deadline3[n]=work[j].Deadline;
+                }
+                else if(work[i].Deadline<work[k].Deadline)
+                {
+                    deadline3[n]=work[k].Deadline;
+                }
+                else
+                deadline3[n]=work[i].Deadline;   //期限
+                document.write("价值："+worth3[n]+" 剩余价值："+leftworth3[n]+" 工时:"+time3[n]+" 期限："+deadline3[n]+"</br>");
+              }
+          }
+      }
+
+      var worth4=new Array();
+      var leftworth4=new Array();
+      var time4=new Array();
+      var deadline4=new Array();
+      var q=0;
+
+      for(var i=0;i<1;i++)    //有四个工作组的情况
+      {
+          for(var j=i+1;j<2;j++)
+          {
+              for(var k=j+1;k<3;k++)
+              {
+                  for(var p=k+1;p<4;p++)
+                  {
+                    document.write("工作序列："+work[i].ID+" "+work[j].ID+" "+work[k].ID+" "+work[p].ID+"</br>");
+                    worth4[q]=work[i].worth+work[j].worth+work[k].worth+work[p].worth;  //价值
+                    leftworth4[q]=14-worth4[q];   //剩余价值
+                    if(work[i].Time<work[j].Time)
+                     {
+                       time4[q]=work[j].Time;
+                     }
+                    else if(work[i].Time<work[k].Time)
+                     {
+                       time4[q]=work[k].Time;
+                     }
+                     else if(work[i].Time<work[p].Time)
+                     {
+                        time4[q]=work[p].Time;
+                     }
+                     else
+                     time4[q]=work[i].Time;      //工时
+
+                     if(work[i].Deadline<work[j].Deadline)
+                     {
+                        deadline4[q]=work[j].Deadline;
+                     }
+                    else if(work[i].Deadline<work[k].Deadline)
+                     {
+                        deadline4[q]=work[k].Deadline;
+                     }
+                     else if(work[i].Deadline<work[p].Deadline)
+                     {
+                        deadline4[q]=work[p].Deadline;
+                     }
+                     else
+                     deadline4[q]=work[i].Deadline;      //期限
+                  
+                    document.write("价值："+worth4[q]+" 剩余价值："+leftworth4[q]+" 工时:"+time4[q]+" 期限："+deadline4[q]+"</br>");
+                  }
+                
+              }
+          }
+      }
+
+
+</script>
+
+</head>
+</html>
