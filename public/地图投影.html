@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>地图投影</title>
+        <title>地图投影(中国，世界)</title>
         <meta charset="UTF-8">
+    </head>
    
     
     <body>
@@ -109,6 +110,7 @@ function BJ(){
         }
         cxt.stroke();
         
+        
     }
 
 }
@@ -184,7 +186,7 @@ function grid4() {//WGS84的格网
     var canvas = document.getElementById("canv");
     var cxt = canvas.getContext("2d");
     cxt.beginPath()
-    cxt.lineWidth = 1;
+    cxt.lineWidth = 0.5;
     var x = 40;
     var y = 30;
     for (i = 0; i < 35; i++) {
@@ -200,32 +202,32 @@ function grid4() {//WGS84的格网
     }
     cxt.stroke();
 }
-function grid5() {//绘制世界版图墨卡托投影格网，间距为5度
+function grid5() {//绘制世界版图墨卡托投影格网，间距为15度
     var canvas = document.getElementById("canv");
     var cxt = canvas.getContext("2d");
     cxt.beginPath()
-    cxt.lineWidth = 2;
+    cxt.lineWidth = 0.5;
     var x = 100;
     var z = 0;
     var q = 0;
     var y1 = 210;
     var y2 = 210;
     for (i = 1; i < 17; i++) {
-        z = z + 5;
+        z = z + 15;
         y1 =y1 - 30 * Math.sin(z * Math.PI / 180);
         cxt.moveTo(100, y1);
         cxt.lineTo(500, y1);
     }
-    for (k = 0; k < 13; k++) {
-        q = q + 5;
+    for (k = 0; k < 10; k++) {
+        q = 15*k;
         y2 = y2 + 30 * Math.sin(q * Math.PI / 180);
         cxt.moveTo(100, y2);
         cxt.lineTo(500, y2);
     }
-    for (j = 0; j < 81; j++) {
+    for (j = 0; j < 28; j++) {
         cxt.moveTo(x, 0);
         cxt.lineTo(x, y2);
-        x = x + 5;
+        x = x + 15;
     }
     cxt.stroke();
 }
@@ -446,5 +448,4 @@ function Circle(){
 
 
 </script>
-</head> 
 <body>
