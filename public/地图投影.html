@@ -10,11 +10,12 @@
         <div >
 
             <div >
-            <p>文件</p>
+            <p>请选择中国地图文件</p>
             <input type="file" id="input"> 
             <br>
-            <input type="button" value="北京54" onclick="BJ()"><input type="button" value="兰伯特" onclick="Lanbert()"><input type="button" value="墨卡托" onclick="Mercator()">
-            <br>
+            <input type="button" value="北京54" onclick="BJ()">
+            <input type="button" value="兰伯特" onclick="Lanbert()">
+            <input type="button" value="墨卡托" onclick="Mercator()">
             <p>请选择世界地图文件</p>
             <input type="file" id="input1">
             <br>
@@ -119,7 +120,7 @@ function grid1() {//北京54格网
     cxt.lineWidth = 2;
     var x = 100;
     var y = 0;
-    for (i = 0; i < 17; i++) {
+    for (i = 0; i < 13; i++) {
         cxt.moveTo(100, y);
         cxt.lineTo(900, y);
         y = y + 50;
@@ -154,8 +155,8 @@ function grid2() {//墨卡托格网
 function grid3() {//兰伯特格网
     var canvas = document.getElementById("canv");
     var cxt = canvas.getContext("2d");
-    cxt.beginPath()
-    cxt.lineWidth = 2;
+    cxt.beginPath();
+    cxt.lineWidth = 1;
     var x1=500;
     var y1=-800;
     var x2=500;
@@ -165,19 +166,14 @@ function grid3() {//兰伯特格网
         y1=y1+1600*Math.cos(Math.PI*5*i/180)
         cxt.moveTo(500, -800);
         cxt.lineTo(x1, y1);
-    }
-    
+    }   
     for (j=0;j<8;j++){
         x2=x2+1600*Math.sin(Math.PI*5*j/180);
         y2=y2+1600*Math.cos(Math.PI*5*j/180)
         cxt.moveTo(500, -800);
-        cxt.lineTo(x2, y2);
-       
-        
+        cxt.lineTo(x2, y2);        
     }
-    
-    cxt.arc(500, -800, 1000, (Math.PI*43/36), (Math.PI*61/36));
-    
+    cxt.arc(500, -800, 1000, (Math.PI*43/36), (Math.PI*61/36),false);
     cxt.stroke();
 }
 function grid4() {//WGS84的格网
@@ -234,8 +230,10 @@ function Lanbert(){
                 var canvas = document.getElementById("canv");
                 var cxt = canvas.getContext("2d");
                 cxt.clearRect(0, 0, 5000, 5000);
+            
                 cxt.beginPath();
                 cxt.lineWidth = 2;
+                grid3();
                 var mb1 = Math.cos(B1) / Math.sqrt(1 - e1 * Math.pow(Math.sin(B1), 2));
                 var mb2 = Math.cos(B2) / Math.sqrt(1 - e1 * Math.pow(Math.sin(B2), 2));
                 var tb1 = Math.tan(Math.PI / 4 - B1 / 2) / Math.pow(((1 - Math.sqrt(e1) * Math.sin(B1)) / (1 + Math.sqrt(e1) * Math.sin(B1))), (Math.sqrt(e1) / 2));
