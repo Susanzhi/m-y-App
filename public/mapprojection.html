@@ -1,0 +1,460 @@
+<!Doctype html> 
+<html> 
+
+<head> 
+    <title>地图投影</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+</head> 
+
+<body> 
+   请选择输入文件： 
+   <input type="file" id="file" multiple="mutifile" > <p>
+    <button onclick="chinageo()">中国地图_地理坐标系</button>
+    <button onclick="chinalam()">中国地图_兰伯特投影</button>
+    <button onclick="chinamer()">中国地图_墨卡托投影</button>
+    <button id ="worldgeo" onclick="worldgeo()">世界地图_地理坐标系</button>
+    <button id="worldmer" onclick="worldmer()">世界地图_墨卡托投影</button><p> 
+    <button onclick="draw2()">绘制大圆航线</button></br>
+    <div align="center"><canvas id="map" width="1200" height="600" style="border:1px solid #000" ></canvas> </div>
+    <script> 
+        var canvas = document.getElementById('map'); 
+        var ctx = canvas.getContext('2d'); 
+        var x1=116.4,y1=39.8,x2=2.2,y2=48.52;//大圆航线的经纬度
+        var a,b,e1,e2; //定义椭球参数
+        function chinageo(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            a = 6378245; 
+            b = 6356863.0187730473; 
+            e1 = 0.006693421622966;
+            e2 = 0.006738525414683;
+            var file = document.getElementById('file').files[0]; 
+            var reader = new FileReader(); 
+            reader.readAsText(file); 
+            var data = null; 
+            reader.onload = function (f){ 
+                data = this.result; 
+                ctx.strokeStyle = "black"; 
+            for (var i = -18; i <= 18; i++) { 
+                for (var j = -36; j < 36; j++) { 
+                    var x = j * 5; 
+                    var y = i * 5; 
+                    var point1 =[(x - 40) * 10,(canvas.height - y * 10)]; 
+                    var point2 = [(x - 35) * 10,(canvas.height - y * 10)]; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            } 
+            for (var i = -36; i <= 36; i++) { 
+                for (var j = -18; j < 18; j++) { 
+                    var x = i * 5; 
+                    var y = j * 5; 
+                    var point1 =[(x - 40) * 10,(canvas.height - y * 10)]; 
+                    var point2 = [(x - 40) * 10,(canvas.height - (y+5) * 10)]; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            }
+            data = data.split('\r\n');
+            var count = 0; 
+            for (var i = 0; i < data.length; i++) { 
+                var line = data[i]; 
+                if (line == "END") { 
+                    ctx.stroke(); 
+                    count = 0; 
+                    continue; 
+                } 
+                var point = line.split(','); 
+                if (point.length < 2) { 
+                    count = 1; 
+                    continue; 
+                } 
+                if (count == 1) { 
+                    ctx.beginPath(); 
+                    var t = [(point[0] - 40) * 10,(canvas.height - point[1] * 10)]; 
+                    ctx.moveTo(t[0], t[1]); 
+                    count++; 
+                } 
+                else { 
+                    var t = [(point[0] - 40) * 10,(canvas.height - point[1] * 10)]; 
+                    ctx.lineTo(t[0], t[1]); 
+                } 
+            }
+            }
+        }   
+        function chinalam(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            a = 6378245; 
+            b = 6356863.0187730473; 
+            e1 = 0.006693421622966;
+            e2 = 0.006738525414683;
+            var file = document.getElementById('file').files[0]; 
+            var reader = new FileReader(); 
+            reader.readAsText(file); 
+            var data = null; 
+            reader.onload = function (f){   
+                data = this.result; 
+                ctx.strokeStyle = "black"; 
+            for (var i = -18; i <= 18; i++) { 
+                for (var j = -36; j < 36; j++) { 
+                    var x = j * 5; 
+                    var y = i * 5; 
+                    var point1 =GetPoint1(x, y); 
+                    var point2 = GetPoint1(x+5,y); 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            } 
+            for (var i = -36; i <= 36; i++) { 
+                for (var j = -18; j < 18; j++) { 
+                    var x = i * 5; 
+                    var y = j * 5;
+                    var point1 =GetPoint1(x, y); 
+                    var point2 = GetPoint1(x, y+5); 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            }
+            data = data.split('\r\n');
+            var count = 0; 
+            for (var i = 0; i < data.length; i++) { 
+                var line = data[i]; 
+                if (line == "END") { 
+                    ctx.stroke(); 
+                    count = 0; 
+                    continue; 
+                } 
+                var point = line.split(','); 
+                if (point.length < 2) { 
+                    count = 1; 
+                    continue; 
+                } 
+                if (count == 1) { 
+                    ctx.beginPath(); 
+                    var t = GetPoint1(point[0], point[1]); 
+                    ctx.moveTo(t[0], t[1]); 
+                    count++; 
+                } 
+                else { 
+                    var t = GetPoint1(point[0], point[1]); 
+                    ctx.lineTo(t[0], t[1]); 
+                } 
+            }
+            }
+        }
+        function chinamer(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            a = 6378245; 
+            b = 6356863.0187730473; 
+            e1 = 0.006693421622966;
+            e2 = 0.006738525414683;
+            var file = document.getElementById('file').files[0]; 
+            var reader = new FileReader(); 
+            reader.readAsText(file); 
+            var data = null; 
+            reader.onload = function (f){ 
+                data = this.result; 
+                ctx.strokeStyle = "black"; 
+            for (var i = -18; i <= 18; i++) { 
+                for (var j = -36; j < 36; j++) { 
+                    var x = j * 5; 
+                    var y = i * 5; 
+                    var point1 =GetPoint2(x, y); 
+                    var point2 = GetPoint2(x+5,y); 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            } 
+            for (var i = -36; i <= 36; i++) { 
+                for (var j = -18; j < 18; j++) { 
+                    var x = i * 5; 
+                    var y = j * 5;
+                    var point1 =GetPoint2(x, y); 
+                    var point2 = GetPoint2(x, y+5); 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            }
+            data = data.split('\r\n');
+            var count = 0; 
+            for (var i = 0; i < data.length; i++) { 
+                var line = data[i]; 
+                if (line == "END") { 
+                    ctx.stroke(); 
+                    count = 0; 
+                    continue; 
+                } 
+                var point = line.split(','); 
+                if (point.length < 2) { 
+                    count = 1; 
+                    continue; 
+                } 
+                if (count == 1) { 
+                    ctx.beginPath(); 
+                    var t = GetPoint2(point[0], point[1]); 
+                    ctx.moveTo(t[0], t[1]); 
+                    count++; 
+                } 
+                else { 
+                    var t = GetPoint2(point[0], point[1]); 
+                    ctx.lineTo(t[0], t[1]); 
+                } 
+            }
+            }
+        }
+        function worldgeo(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            a = 6378137;  
+            b = 6356752.3142;
+            e1 = 0.00669437999013; 
+            e2 = 0.006739496742227;
+            var file = document.getElementById('file').files[0]; 
+            var reader = new FileReader(); 
+            reader.readAsText(file); 
+            var data = null; 
+            reader.onload = function (f)
+            { 
+                data = this.result; 
+                ctx.strokeStyle = "black"; 
+            for (var i = -18; i <= 18; i++) { 
+                for (var j = -36; j < 36; j++) { 
+                    var x = j * 5; 
+                    var y = i * 5; 
+                    var point1 =[(x - 40) * 3 + 750, canvas.height - y * 3 - 300]; 
+                    var point2 = [(x - 35) * 3 + 750, canvas.height - y * 3 - 300]; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            } 
+ 
+            for (var i = -36; i <= 36; i++) { 
+                for (var j = -18; j < 18; j++) { 
+                    var x = i * 5; 
+                    var y = j * 5;
+                    var point1 =[(x - 40) * 3 + 750, canvas.height - y * 3 - 300]; 
+                    var point2 = [(x - 40) * 3 + 750, canvas.height - (y+5) * 3 - 300]; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            }
+            data = data.split('\r\n');
+            var count = 0; 
+            for (var i = 0; i < data.length; i++) { 
+                var line = data[i]; 
+                if (line == "END") { 
+                    ctx.stroke(); 
+                    count = 0; 
+                    continue; 
+                } 
+                var point = line.split(','); 
+                if (point.length < 2) { 
+                    count = 1; 
+                    continue; 
+                } 
+                if (count == 1) { 
+                    ctx.beginPath(); 
+                    var t = [(point[0] - 40) * 3 + 750, canvas.height - point[1] * 3 - 300]; 
+                    ctx.moveTo(t[0], t[1]); 
+                    count++; 
+                } 
+                else { 
+                    var t = [(point[0] - 40) * 3 + 750, canvas.height - point[1] * 3 - 300]; 
+                    ctx.lineTo(t[0], t[1]); 
+                } 
+            }
+            }
+        }
+        function worldmer(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            a = 6378137;  
+            b = 6356752.3142;
+            e1 = 0.00669437999013; 
+            e2 = 0.006739496742227;
+            var file = document.getElementById('file').files[0]; 
+            var reader = new FileReader(); 
+            reader.readAsText(file); 
+            var data = null; 
+            reader.onload = function (f){ 
+                data = this.result; 
+                ctx.strokeStyle = "black"; 
+            for (var i = -18; i <= 18; i++) { 
+                for (var j = -36; j < 36; j++) { 
+                    var x = j * 5; 
+                    var y = i * 5; 
+                    var point1 =GetPoint3(x, y); 
+                    var point2 = GetPoint3(x+5,y); 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            } 
+            for (var i = -36; i <= 36; i++) { 
+                for (var j = -18; j < 18; j++) { 
+                    var x = i * 5; 
+                    var y = j * 5;
+                    var point1 =GetPoint3(x, y); 
+                    var point2 = GetPoint3(x, y+5); 
+                    ctx.beginPath(); 
+                    ctx.moveTo(point1[0], point1[1]); 
+                    ctx.lineTo(point2[0], point2[1]); 
+                    ctx.stroke(); 
+                } 
+            }
+            data = data.split('\r\n');
+            var count = 0; 
+            for (var i = 0; i < data.length; i++) { 
+                var line = data[i]; 
+                if (line == "END") { 
+                    ctx.stroke(); 
+                    count = 0; 
+                    continue; 
+                } 
+                var point = line.split(','); 
+                if (point.length < 2) { 
+                    count = 1; 
+                    continue; 
+                } 
+                if (count == 1) { 
+                    ctx.beginPath(); 
+                    var t = GetPoint3(point[0], point[1]); 
+                    ctx.moveTo(t[0], t[1]); 
+                    count++; 
+                } 
+                else { 
+                    var t = GetPoint3(point[0], point[1]); 
+                    ctx.lineTo(t[0], t[1]); 
+                } 
+            }
+            }
+        }
+        function lambert(L, B) { 
+            L = L * Math.PI / 180; 
+            B = B * Math.PI / 180; 
+            var b1 = 20 * Math.PI / 180; 
+            var b2 = 40 * Math.PI / 180; 
+            var l0 = 105 * Math.PI / 180;  //原点经度 
+            var b0 = 0;  //原点纬度 
+            var m = Math.cos(B) / Math.sqrt(1 - e1 * Math.sin(B) * Math.sin(B)); 
+            var mb1 = Math.cos(b1) / Math.sqrt(1 - e1 * Math.sin(b1) * Math.sin(b1)); 
+            var mb2 = Math.cos(b2) / Math.sqrt(1 - e1 * Math.sin(b2) * Math.sin(b2)); 
+            var e = Math.sqrt(e1); 
+            var temp = Math.tan(Math.PI / 4 - B / 2); 
+            var t = Math.tan(Math.PI / 4 - B / 2) / Math.pow(((1 - e * Math.sin(B)) / (1 + e * Math.sin(B))), e / 2); 
+            var tb1 = Math.tan(Math.PI / 4 - b1 / 2) / Math.pow(((1 - e * Math.sin(b1)) / (1 + e * Math.sin(b1))), e / 2); 
+            var tb2 = Math.tan(Math.PI / 4 - b2 / 2) / Math.pow(((1 - e * Math.sin(b2)) / (1 + e * Math.sin(b2))), e / 2); 
+            var n = Math.log(mb1 / mb2) / Math.log(tb1 / tb2); 
+            var F = mb1 / (n * Math.pow(tb1, n)); 
+            var r = a * F * Math.pow(t, n); 
+            var t0 = Math.tan(Math.PI / 4 - b0 / 2) / Math.pow((1 - e * Math.sin(b0)) / (1 + e * Math.sin(b0)), e / 2); 
+            var r0 = a * F * Math.pow(t0, n); 
+            var theta = n * (L - l0); 
+            var X = r0 - r * Math.cos(theta); 
+            var Y = r * Math.sin(theta); 
+            return [Y, X]; 
+        }
+        function mercator(L, B) { 
+            L = L * Math.PI / 180; 
+            B = B * Math.PI / 180; 
+            var B0 = 0,L0 = 0; 
+            var e = Math.sqrt(e1); 
+            var K = (a * a / b) / Math.sqrt(1 + e2 * Math.cos(B0) * Math.cos(B0)) * Math.cos(B0); 
+            var X = K * Math.log(Math.tan(Math.PI / 4 + B / 2) * Math.pow(((1 - e * Math.sin(B)) / (1 + e * Math.sin(B))), e / 2)); 
+            var Y = K * (L - L0); 
+            return [Y, X]; 
+        }
+        function GetPoint1(x,y){
+            var point = lambert(x, y); 
+            var x0 = (point[0] - 5000000) / 10100 + 1100; 
+            var y0 = canvas.height - (point[1] - 1000000) / 10100 - 60; 
+            return [x0, y0];
+        }
+        function GetPoint2(x,y){
+            var point = mercator(x, y); 
+            var x0 = (point[0] - 13700000) / 12000 + 780; 
+            var y0 = canvas.height - (point[1] - 5700000) / 12000 - 450; 
+            return [x0, y0];
+        }
+        function GetPoint3(x,y){
+            var point = mercator(x, y); 
+            var x0 = (point[0] - 13700000) / 70000 + 780; 
+            var y0 = canvas.height - (point[1] - 5700000) / 70000 - 390; 
+            return [x0, y0]; 
+        }
+        /*function draw1(){
+            ctx.strokeStyle = "red"; 
+            var point = [[x1, y1], [x2, y2]]; 
+            var addpoint; 
+            var p1, p2; 
+            var i = 0, j = 1; 
+            while (i < 6) { 
+                for (var j = 0; j < point.length - 1; j = j + 2) { 
+                    p1 = point[j]; 
+                    p2 = point[j + 1]; 
+                    addpoint = drawline(p1[0], p1[1], p2[0], p2[1]); 
+                    point.splice(j + 1, 0, addpoint); } 
+                i++; 
+            } 
+            point.sort(sortpoint); 
+            ctx.beginPath();
+            for (var i = 0; i < point.length; i++) { 
+                var point0 = [(point[i][0] - 40) * 3 + 750, canvas.height - point[i][1] * 3 - 300]; 
+                ctx.lineTo(point0[0], point0[1]); 
+            } 
+            ctx.stroke(); 
+        }*/
+        function draw2(){
+            ctx.strokeStyle = "red"; 
+            var point = [[x1, y1], [x2, y2]]; 
+            var addpoint; 
+            var p1, p2; 
+            var i = 0, j = 1; 
+            while (i < 6) { 
+                for (var j = 0; j < point.length - 1; j = j + 2) { 
+                    p1 = point[j]; 
+                    p2 = point[j + 1]; 
+                    addpoint = drawline(p1[0], p1[1], p2[0], p2[1]); 
+                    point.splice(j + 1, 0, addpoint); 
+                } 
+                i++; 
+            } 
+            point.sort(sortpoint); 
+            ctx.beginPath();
+            for (var i = 0; i < point.length; i++) { 
+                var point0 = GetPoint3(point[i][0], point[i][1]); 
+                ctx.lineTo(point0[0], point0[1]); 
+            } 
+            ctx.stroke(); 
+        }
+        function sortpoint(a, b) { 
+            return b[0] - a[0]; 
+        }
+        function drawline(long1, lat1, long2, lat2) { 
+            lat1 = lat1 * Math.PI / 180; 
+            lat2 = lat2 * Math.PI / 180; 
+            long1 = long1 * Math.PI / 180; 
+            long2 = long2 * Math.PI / 180; 
+            var Bx = Math.cos(lat2) * Math.cos(long2 - long1); 
+            var By = Math.cos(lat2) * Math.sin(long2 - long1); 
+            var latm = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By)); 
+            var lonm = long1 + Math.atan2(By, Math.cos(lat1) + Bx); 
+            return [lonm * 180 / Math.PI, latm * 180 / Math.PI]; 
+        }
+    </script> 
+</body> 
+</html> 
