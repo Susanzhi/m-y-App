@@ -7,4 +7,4 @@
  [跳马问题](https://susanzhi.github.io/m-y-App/public/tiaoma.html)<br>
  https://susanzhi.github.io/m-y-App/public/序列(1).html <br>
  https://susanzhi.github.io/m-y-App/public/姓名编码.html <br>
- https://susanzhi.github.io/m-y-App/public/地图投影.html <br>
+ https://susanzhi.github.io/m-y-App/public/mapprojection.html <br>
