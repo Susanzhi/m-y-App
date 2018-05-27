@@ -1,0 +1,180 @@
+<!Doctype html> 
+<html> 
+ 
+<head> 
+    <title>四叉树</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+</head> 
+
+
+<body> 
+    请输入四叉树四进制文件：
+    <input type="file" id="file" > 
+    <button onclick="Cal()">计算</button> 
+    <br/> 
+    <div id="result" style="margin-top: 12px;line-height:30px"></div> 
+    <script> 
+        var juzhen=new Array();
+        juzhen = []; 
+        var rows, cols; 
+
+        function Cal() { 
+            var file = document.getElementById('file').files[0]; 
+            var reader = new FileReader(); 
+            reader.readAsText(file); 
+            var data = null; 
+            reader.onload = function (e) 
+            { 
+                data = this.result; 
+                data = data.split('\r\n'); 
+                var read = data[0].split(','); 
+                rows=parseInt(read[0]); 
+                cols=parseInt(read[1]);
+                for (var i = 1; i < data.length; i++) 
+                { 
+                    var line = data[i]; 
+                    if (line == "") 
+                        continue; 
+                    line = line.split(','); 
+                    var a = []; 
+                    for (var j = 0; j < line.length; j++) 
+                    { 
+                        if (line[j] == "") 
+                            continue; 
+                        var n = 0; 
+                        while (line[j][n] == " ") 
+                            n++; 
+                        var n = parseInt(line[j].slice(n, line[j].length)); 
+                        a.push(n); 
+                    } 
+                    juzhen.push(a); 
+                } 
+                QuardTree(0, 0, 1);  
+            } 
+        } 
+         
+        //判断是否数据相同 
+        function check(x1, x2, y1, y2) 
+        { 
+            var a = juzhen[x1][y1]; 
+            for (var i = x1; i < x2; i++) 
+            { 
+                for (var j = y1; j < y2; j++) 
+                { 
+                    if (juzhen[i][j] != a) 
+                        {return -1;} 
+                } 
+            } 
+            return a; 
+        } 
+        //十进制转二进制数组 
+        function Tobinary(n) { 
+            var a = [];  
+            do
+            { 
+                a.push(n % 2); 
+                n = parseInt(n / 2); 
+            } while (n != 0);
+            return a; 
+        } 
+        function transfrom(i, j, k) { 
+            var val = rows / Math.pow(2, k); 
+            var x = parseInt(i / val); var y = parseInt(j / val); 
+            var x = Tobinary(x); var y = Tobinary(y); 
+            var l1 = x.length, l2 = y.length;
+            var r = rows,n = 0; 
+            do 
+            { 
+                r = r / 2; 
+                n++; 
+            } while (r != 1);
+            if (x.length < n) 
+            { 
+                for (var a = 0; a < n - l1; a++) 
+                { 
+                    x.push(0); 
+                } 
+            } 
+            if (y.length < n) {  
+                for (a = 0; a < n - l2; a++) 
+                { 
+                    y.push(0); 
+                } 
+            } 
+            var m = ""; 
+            for (a = x.length - 1; a >= 0; a--) 
+            { 
+                m = m+(2 * x[a] + y[a]).toString(); 
+            } 
+ 
+            return m; 
+        } 
+        var calcu = []
+        function QuardTree(x, y, k) { 
+            var val = rows / Math.pow(2, k); 
+            if (val == 0) 
+                return; 
+            var v1, v2, v3, v4; //4层
+            if ((v1 = check(x, x + val, y, y + val)) != -1) 
+            { 
+                var code = transfrom(x, y, k); 
+                var r = { 
+                    code: code, 
+                    range: k, 
+                    value: v1 
+                } 
+                calcu.push(r); 
+            } 
+            else 
+            { 
+                QuardTree(x, y, k + 1); 
+            } 
+            if ((v2 = check(x + val, x + 2 * val, y, y + val)) != -1) { 
+                var code = transfrom(x + val, y, k); 
+                var r = { 
+                    code: code, 
+                    range: k, 
+                    value: v2 
+                } 
+                calcu.push(r); 
+            } 
+            else { 
+                QuardTree(x + val, y, k + 1); 
+            } 
+            if ((v3 = check(x, x + val, y + val, y + 2 * val)) != -1) { 
+                var code = transfrom(x, y + val, k); 
+                var r = { 
+                    code: code, 
+                    range: k, 
+                    value: v3 
+                } 
+                calcu.push(r); 
+            } 
+            else { 
+                QuardTree(x, y + val, k + 1); 
+            } 
+            if ((v4 = check(x + val, x + 2 * val, y + val, y + 2 * val)) != -1) { 
+                var code = transfrom(x + val, y + val, k); 
+                var r = { 
+                    code: code, 
+                    range: k, 
+                    value: v4 
+                } 
+                calcu.push(r); 
+            } 
+            else { 
+                QuardTree(x + val, y + val, k + 1); 
+            } 
+            var result = document.getElementById('result'); 
+            result.innerHTML = ""; 
+            result.innerHTML = "结果为:<br/>"; 
+            for (var i = 0; i < calcu.length; i++) { 
+                result.innerHTML += calcu[i].code+" "  + calcu[i].range +" "+  calcu[i].value +"<br/>"; 
+            } 
+        } 
+    
+    </script> 
+</body> 
+
+
+</html> 
