@@ -16,7 +16,7 @@
 
 ## [多边形面积计算](https://susanzhi.github.io/m-y-App/public/多边形面积计算.html)
 
-## [道格拉斯算法](https://susanzhi.github.io/m-y-App/public/DPsuanfa.html)
+## [道格拉斯算法](https://susanzhi.github.io/m-y-App/public/DP.html)
 
 ## [四叉树](https://susanzhi.github.io/m-y-App/public/四叉树.html)
 
