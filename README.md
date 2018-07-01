@@ -4,7 +4,7 @@
 
 ## [hellocanvas](https://susanzhi.github.io/m-y-App/public/hellocanvas.html)
 
-## [跳马问题](https://susanzhi.github.io/m-y-App/public/tiaoma.html)
+# [跳马问题](https://susanzhi.github.io/m-y-App/public/tiaoma.html)
 
 ## [最佳工作序列](https://susanzhi.github.io/m-y-App/public/序列)
 
@@ -24,6 +24,6 @@
 
 ## [地图符号](https://susanzhi.github.io/m-y-App/public/地图符号.html)
 
-##[矢量转栅](https://susanzhi.github.io/m-y-App/public/矢量转栅格.html)
+## [矢量转栅格](https://susanzhi.github.io/m-y-App/public/矢量转栅格.html)
 
 
